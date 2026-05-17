@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Aurora520 放松挑战应用 - 聚合启动脚本
 一键启动所有服务：aurora_server.py、relax_challenge.py、前端静态服务

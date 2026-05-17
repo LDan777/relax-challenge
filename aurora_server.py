@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import asyncio
 import json
 import math
@@ -52,7 +53,7 @@ def bluetooth_handler(msg):
 
 # ==================== 仿真模拟器 ====================
 async def mock_eeg_generator():
-    print(" 💡 [仿真提示] 当前处于模拟模式，正在生成虚拟 RELAX 指数数据...")
+    print(" [仿真提示] 当前处于模拟模式，正在生成虚拟 RELAX 指数数据...")
     print("    模拟数据范围：0.6 ~ 1.2（会有波动）")
     print("    更新频率：每秒一次\n")
     
@@ -66,7 +67,7 @@ async def mock_eeg_generator():
         mock_relax_value = max(0.5, min(1.5, mock_relax_value))
         
         broadcast_relax_index(mock_relax_value)
-        print(f"📊 [模拟数据] RELAX指数: {mock_relax_value:.4f}")
+        print(f"[模拟数据] RELAX指数: {mock_relax_value:.4f}")
         
         await asyncio.sleep(1)
         time_counter += 1
@@ -82,13 +83,13 @@ async def connection_router(websocket, path=None):
     
     if "/relax" in current_path:
         relax_clients.add(websocket)
-        print(f" ✅ 连接成功：放松挑战数据源已上线 ({websocket.remote_address})")
+        print(f" [OK] 连接成功：放松挑战数据源已上线 ({websocket.remote_address})")
         print(f"    当前 relax_clients 数量: {len(relax_clients)}")
         try:
             await websocket.wait_closed()
         finally:
             relax_clients.discard(websocket)
-            print(f" ❌ 断开连接：放松挑战数据源已下线 ({websocket.remote_address})")
+            print(f" [CLOSE] 断开连接：放松挑战数据源已下线 ({websocket.remote_address})")
     else:
         print(f"[警告] 未知路由: {current_path}，关闭连接")
         await websocket.close(reason="未知路由")
@@ -139,7 +140,7 @@ async def control_router(websocket, path=None):
 
 # ==================== 主程序启动 ====================
 async def start_server():
-    global main_loop, mock_task
+    global main_loop, mock_task, MOCK_MODE, ble_thread
     main_loop = asyncio.get_running_loop()
     
     # 启动数据服务
@@ -153,17 +154,17 @@ async def start_server():
     
     # 启动初始数据生成器
     if MOCK_MODE:
-        print(" 💡 [仿真提示] 当前处于模拟模式，正在生成虚拟脑电数据...")
+        print(" [仿真提示] 当前处于模拟模式，正在生成虚拟脑电数据...")
         mock_task = asyncio.create_task(mock_eeg_generator())
     else:
-        print(" 🔌 [蓝牙提示] 正在启动真实蓝牙监听...")
+        print(" [蓝牙提示] 正在启动真实蓝牙监听...")
         try:
             from BLE_relax.BLE_relax0 import start
             import threading
             ble_thread = threading.Thread(target=start, args=(bluetooth_handler,), daemon=True)
             ble_thread.start()
         except ImportError as e:
-            print(f"❌ 蓝牙模块导入失败: {e}")
+            print(f"[ERROR] 蓝牙模块导入失败: {e}")
             print("   回退到模拟模式")
             MOCK_MODE = True
             mock_task = asyncio.create_task(mock_eeg_generator())

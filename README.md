@@ -294,12 +294,6 @@ CHALLENGE_TIMEOUT = 120.0     # 挑战超时时长（秒）
 | 数据源 | Python WebSocket | 8765 |
 | 控制 | Python WebSocket | 8766 |
 
----
-
-## � 文档
-
-- **[GITHUB_UPLOAD_GUIDE.md](./GITHUB_UPLOAD_GUIDE.md)** - GitHub 上传指南
-- **[UPLOAD_CHECKLIST.md](./UPLOAD_CHECKLIST.md)** - 上传检查清单
 
 ---
 

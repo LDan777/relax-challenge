@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import asyncio
 import json
 import time
@@ -133,6 +134,7 @@ def process_challenge_logic(relax_index):
 # ==================== 4. 通信接口管理 ====================
 async def frontend_handler(websocket, path=None):
     """ 管理 Vue 前端的连接 """
+    global challenge_ended, current_status_string
     frontend_clients.add(websocket)
     print(f" ✅ 网页端已成功连入算法控制台 ({websocket.remote_address})")
     try:
@@ -181,14 +183,16 @@ async def notify_aurora_server(data):
 
 async def listen_to_aurora_server():
     """ 从统一后端拿 RELAX 指数数据 """
+    global challenge_ended, challenge_started
     uri = "ws://localhost:8765/relax"
     
     try:
         async with websockets.connect(uri) as websocket:
             print(f"✅ 已连接到数据源服务器 {uri}")
             async for message in websocket:
-                if challenge_ended: 
-                    break
+                # 只有当挑战已开始且未结束时才处理数据
+                if not challenge_started or challenge_ended: 
+                    continue
                 try:
                     data = json.loads(message)
                     relax_index = data.get("relax_index")
