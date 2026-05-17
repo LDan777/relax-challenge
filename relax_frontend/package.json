@@ -1,0 +1,24 @@
+{
+  "name": "relax_frontend",
+  "version": "1.0.0",
+  "description": "Aurora Relax Challenge Frontend",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "echarts": "^5.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "gh-pages": "^6.1.1",
+    "vite": "^5.0.0"
+  }
+}
